@@ -63,6 +63,15 @@ class WaterParticle {
       const dx = particle.x - this.x;
       const dy = particle.y - this.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 50) {
+        ctx.strokeStyle = 'rgba(0, 150, 255, 0.5)';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(particle.x, particle.y);
+        ctx.stroke();
+      }
+
       const minDistance = this.radius + particle.radius;
 
       if (distance < minDistance) {
@@ -110,12 +119,12 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
 // Устанавливаем размеры канваса
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 900;
+canvas.height = 600;
 
 // Создаем массив частиц
 const particles = [];
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 500; i++) {
   particles.push(
     new WaterParticle(
       Math.random() * canvas.width,
@@ -139,10 +148,6 @@ function animate() {
 animate();
 
 // Обработка изменения размера окна
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
 
 window.addEventListener('mousemove', (event) => {
   cursor.x = event.clientX;
