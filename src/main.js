@@ -64,7 +64,7 @@ class WaterParticle {
       const dy = particle.y - this.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      if (distance < 50) {
+      if (distance < 40) {
         ctx.strokeStyle = 'rgba(0, 150, 255, 0.5)';
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
@@ -75,24 +75,25 @@ class WaterParticle {
       const minDistance = this.radius + particle.radius;
 
       if (distance < minDistance) {
-        // Увеличиваем силу отталкивания
         const angle = Math.atan2(dy, dx);
+
         const targetX = this.x + Math.cos(angle) * minDistance;
         const targetY = this.y + Math.sin(angle) * minDistance;
 
-        // Увеличиваем коэффициент отталкивания с 0.05 до 0.5
-        const ax = (targetX - particle.x) * 0.5;
-        const ay = (targetY - particle.y) * 0.5;
+        // Уменьшаем коэффициент отталкивания с 0.5 до 0.03
+        const ax = (targetX - particle.x) * 0.03;
+        const ay = (targetY - particle.y) * 0.03;
 
         this.velocityX -= ax;
         this.velocityY -= ay;
+
         particle.velocityX += ax;
         particle.velocityY += ay;
 
-        // Добавляем минимальное расстояние между частицами
+        // Уменьшаем влияние перекрытия
         const overlap = minDistance - distance;
-        const moveX = (overlap * dx) / distance / 2;
-        const moveY = (overlap * dy) / distance / 2;
+        const moveX = (overlap * dx) / distance / 4; // Делим на 4 вместо 2
+        const moveY = (overlap * dy) / distance / 4;
 
         this.x -= moveX;
         this.y -= moveY;
@@ -128,7 +129,7 @@ for (let i = 0; i < 500; i++) {
   particles.push(
     new WaterParticle(
       Math.random() * canvas.width,
-      (Math.random() * canvas.height) / 2
+      Math.random() * canvas.height
     )
   );
 }
